@@ -1,8 +1,18 @@
-export const startVoiceRecognition = (onResult, onError, onEnd) => {
+export const startVoiceRecognition = async (onResult, onError, onEnd) => {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  
+
   if (!SpeechRecognition) {
     if (onError) onError("Speech Recognition API is not supported in this browser.");
+    return null;
+  }
+
+  let permissionStream = null;
+  try {
+    permissionStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    // Keep the stream alive while recognition is happening 
+    // to prevent the OS from locking up the microphone handle.
+  } catch {
+    if (onError) onError("Microphone access denied. Please allow microphone permissions in your browser.");
     return null;
   }
 
@@ -15,7 +25,7 @@ export const startVoiceRecognition = (onResult, onError, onEnd) => {
   recognition.onresult = (event) => {
     let finalTranscript = '';
     let interimTranscript = '';
-    
+
     for (let i = event.resultIndex; i < event.results.length; ++i) {
       if (event.results[i].isFinal) {
         finalTranscript += event.results[i][0].transcript;
@@ -23,18 +33,33 @@ export const startVoiceRecognition = (onResult, onError, onEnd) => {
         interimTranscript += event.results[i][0].transcript;
       }
     }
-    
+
     if (onResult) onResult(finalTranscript, interimTranscript);
   };
 
   recognition.onerror = (event) => {
-    if (onError) onError(event.error);
+    let errorMessage = event.error;
+    if (event.error === 'not-allowed') {
+      errorMessage = 'Microphone access denied. Please allow microphone permissions and try again.';
+    }
+    if (onError) onError(errorMessage);
   };
 
   recognition.onend = () => {
+    if (permissionStream) {
+      permissionStream.getTracks().forEach(track => track.stop());
+    }
     if (onEnd) onEnd();
   };
 
-  recognition.start();
-  return recognition;
+  try {
+    recognition.start();
+    return recognition;
+  } catch (error) {
+    if (permissionStream) {
+      permissionStream.getTracks().forEach(track => track.stop());
+    }
+    if (onError) onError(error.message || "Failed to start speech recognition.");
+    return null;
+  }
 };

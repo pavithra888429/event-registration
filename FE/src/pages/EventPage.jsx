@@ -21,16 +21,22 @@ const EventPage = () => {
   const handleRegistrationSubmit = async (formData) => {
     setIsSubmitting(true);
     setError('');
-    
+
     try {
-      // In a real scenario, this connects to backend. 
-      // Using mock success if api call fails locally (since BE is not built yet per instructions)
-      await registerForEvent({ ...formData, eventId: 1 }).catch(e => console.log('Mocking success since BE is pending', e));
-      setTimeout(() => {
+      const payload = {
+        ...formData,
+        eventId: "EVENT001" // Using the seeded event ID
+      };
+
+      const response = await registerForEvent(payload);
+
+      if (response.message === "Registration successful") {
         setIsSuccess(true);
-        setIsSubmitting(false);
-      }, 1000);
-      
+      } else {
+        setError(response.message || "Registration failed.");
+      }
+      setIsSubmitting(false);
+
     } catch (err) {
       setError(err.message || "Failed to register. Please try again.");
       setIsSubmitting(false);
@@ -50,20 +56,20 @@ const EventPage = () => {
         <div className="lg:col-span-5 xl:col-span-4 sticky top-6">
           <EventCard event={EVENT_DETAILS} />
         </div>
-        
+
         <div className="lg:col-span-7 xl:col-span-8">
           {error && (
             <div className="mb-6 bg-rose-50 border border-rose-200 text-rose-700 px-4 py-3 rounded-xl">
               {error}
             </div>
           )}
-          
+
           {isSuccess ? (
             <SuccessMessage onReset={() => setIsSuccess(false)} />
           ) : (
-            <RegistrationForm 
-              onSubmit={handleRegistrationSubmit} 
-              isSubmitting={isSubmitting} 
+            <RegistrationForm
+              onSubmit={handleRegistrationSubmit}
+              isSubmitting={isSubmitting}
             />
           )}
         </div>

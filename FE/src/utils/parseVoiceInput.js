@@ -5,26 +5,26 @@
 export const parseVoiceInput = (transcript) => {
   const text = transcript.toLowerCase();
   console.log('🎤 RAW VOICE HEARD BY BROWSER:', text);
-  
+
   const formData = {};
 
   // Extract Name
   // supports: "my name is X", "name is X", "student name is X", "hello this side X", "name X"
   const nameMatch = text.match(/(?:my name is|student name is|student name|name is|hello this side|this side|name)\s+([^,0-9]+?)(?=\s+(?:roll|department|year|email|college mail|phone)|$|,|\.)/i);
   if (nameMatch && nameMatch[1]) {
-    formData.name = nameMatch[1].trim().replace(/\b\w/g, c => c.toUpperCase());
+    formData.studentName = nameMatch[1].trim().replace(/\b\w/g, c => c.toUpperCase());
   }
 
   // Extract Roll Number
   // supports: "roll number 101", "roll #22", "roll 22", "roll #22, bga 0045"
-  const rollMatch = text.match(/roll(?:\s+number)?(?:\s+is)?(?:\s+#)?\s*([a-z0-9\s,]+?)(?=\s+(?:department|year|email|college mail|phone|$|\.))/i);
+  const rollMatch = text.match(/roll(?:\s+number)?(?:\s+is)?(?:\s+#)?\s*([a-z0-9\s,]+?)(?=\s+(?:department|year|email|college mail|phone)|$|,|\.)/i);
   if (rollMatch && rollMatch[1]) {
     formData.rollNumber = rollMatch[1].replace(/[\s,]/g, '').toUpperCase();
   }
 
   // Extract Department
   // supports: "department CSE", "department is IT", "department bca"
-  const deptMatch = text.match(/department(?:\s+is)?\s+([a-z\s]+?)(?:,| year| email| college mail| phone|$|\.)/i);
+  const deptMatch = text.match(/department(?:\s+is)?\s+([a-z\s]+?)(?=\s+(?:year|email|college mail|phone)|$|,|\.)/i);
   if (deptMatch) {
     let dept = deptMatch[1].trim().toUpperCase();
     if (dept === 'C S E' || dept === 'COMPUTER SCIENCE') dept = 'CSE';

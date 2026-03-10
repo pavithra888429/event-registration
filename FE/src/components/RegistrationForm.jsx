@@ -5,14 +5,14 @@ import { Send, AlertCircle } from 'lucide-react';
 
 const RegistrationForm = ({ onSubmit, isSubmitting }) => {
   const [formData, setFormData] = useState({
-    name: '',
+    studentName: '',
     rollNumber: '',
     department: '',
     year: '',
     email: '',
     phone: ''
   });
-  
+
   const [voiceError, setVoiceError] = useState('');
 
   const handleChange = (e) => {
@@ -21,8 +21,10 @@ const RegistrationForm = ({ onSubmit, isSubmitting }) => {
   };
 
   const handleVoiceTranscript = (transcript) => {
+    console.log("📝 RegistrationForm: Transcript received ->", `"${transcript}"`);
     setVoiceError('');
     const parsedData = parseVoiceInput(transcript);
+    console.log("📝 RegistrationForm: Data extracted by parser ->", parsedData);
     setFormData(prev => ({ ...prev, ...parsedData }));
   };
 
@@ -39,7 +41,7 @@ const RegistrationForm = ({ onSubmit, isSubmitting }) => {
       </div>
 
       <div className="mb-8">
-        <VoiceButton 
+        <VoiceButton
           onTranscript={handleVoiceTranscript}
           onError={(err) => setVoiceError(err)}
         />
@@ -61,16 +63,16 @@ const RegistrationForm = ({ onSubmit, isSubmitting }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="space-y-1">
             <label className="text-sm font-medium text-slate-700">Student Name</label>
-            <input 
-              type="text" required name="name"
-              value={formData.name} onChange={handleChange}
+            <input
+              type="text" required name="studentName"
+              value={formData.studentName} onChange={handleChange}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
               placeholder="e.g. Jane Doe"
             />
           </div>
           <div className="space-y-1">
             <label className="text-sm font-medium text-slate-700">Roll Number</label>
-            <input 
+            <input
               type="text" required name="rollNumber"
               value={formData.rollNumber} onChange={handleChange}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all uppercase"
@@ -82,7 +84,7 @@ const RegistrationForm = ({ onSubmit, isSubmitting }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="space-y-1">
             <label className="text-sm font-medium text-slate-700">Department</label>
-            <select 
+            <select
               required name="department"
               value={formData.department} onChange={handleChange}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-white"
@@ -99,7 +101,7 @@ const RegistrationForm = ({ onSubmit, isSubmitting }) => {
           </div>
           <div className="space-y-1">
             <label className="text-sm font-medium text-slate-700">Year of Study</label>
-            <select 
+            <select
               required name="year"
               value={formData.year} onChange={handleChange}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all bg-white"
@@ -116,7 +118,7 @@ const RegistrationForm = ({ onSubmit, isSubmitting }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="space-y-1">
             <label className="text-sm font-medium text-slate-700">College Email</label>
-            <input 
+            <input
               type="email" required name="email"
               value={formData.email} onChange={handleChange}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
@@ -125,7 +127,7 @@ const RegistrationForm = ({ onSubmit, isSubmitting }) => {
           </div>
           <div className="space-y-1">
             <label className="text-sm font-medium text-slate-700">Phone Number</label>
-            <input 
+            <input
               type="tel" required name="phone" pattern="[0-9]{10}"
               value={formData.phone} onChange={handleChange}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
@@ -134,8 +136,8 @@ const RegistrationForm = ({ onSubmit, isSubmitting }) => {
           </div>
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={isSubmitting}
           className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors shadow-lg shadow-indigo-200 mt-6"
         >
