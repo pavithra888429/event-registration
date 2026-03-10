@@ -19,6 +19,7 @@ connectDB();
 // Routes
 app.use('/api/events', eventRoutes);
 app.use('/api/register', registrationRoutes);
+app.use('/api/registrations', registrationRoutes);
 
 // Base route for testing
 app.get('/', (req, res) => {

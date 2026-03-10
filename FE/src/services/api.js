@@ -16,4 +16,13 @@ export const registerForEvent = async (registrationData) => {
   }
 };
 
+export const fetchRegistrations = async () => {
+  try {
+    const response = await api.get('/api/registrations');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};
+
 export default api;

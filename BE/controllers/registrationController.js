@@ -35,6 +35,17 @@ const registerEvent = async (req, res, next) => {
     }
 };
 
+// Get all registrations
+const getAllRegistrations = async (req, res, next) => {
+    try {
+        const registrations = await Registration.find().sort({ createdAt: -1 });
+        res.status(200).json(registrations);
+    } catch (error) {
+        next(error);
+    }
+};
+
 module.exports = {
     registerEvent,
+    getAllRegistrations,
 };

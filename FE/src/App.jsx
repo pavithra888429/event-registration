@@ -1,7 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import EventPage from './pages/EventPage';
-import AdminDashboard from './pages/AdminDashboard'; // We will create this next
+import AdminDashboard from './pages/AdminDashboard';
+import RegisteredStudents from './pages/RegisteredStudents';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<EventPage />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/dashboard/registrations" element={<RegisteredStudents />} />
         </Routes>
       </div>
     </Router>
