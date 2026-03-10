@@ -12,7 +12,7 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://event-registration-frontend.onrender.com', 'https://your-frontend-url.onrender.com'] // Update with actual frontend URL
+    ? 'https://event-registration-frontend-epqv.onrender.com'
     : 'http://localhost:3000'
 }));
 app.use(express.json());
